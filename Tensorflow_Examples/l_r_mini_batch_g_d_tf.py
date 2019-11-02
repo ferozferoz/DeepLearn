@@ -1,12 +1,13 @@
 import numpy as np
 import tensorflow as tf
 from sklearn.datasets import fetch_california_housing
+import math
 learning_rate = 0.001
 n_epoch = 1000
 batch_size = 100
 housing = fetch_california_housing()
 m,n = housing.data.shape
-n_batches = int(np.ceil(m / batch_size))
+n_batches = math.floor(m/batch_size)
 housing_bias = np.c_[np.ones((m,1)),housing.data]
 housing_target = housing.target.reshape(-1,1)
 X = tf.placeholder(tf.float32,shape=(None,n+1),name="X")
@@ -22,9 +23,9 @@ training_op = optimizer.minimize(mse)
 #training_op = tf.assign(theta, theta - learning_rate * gradient )
 def fetch_data(batch_index,batch_size):
     k = batch_index*batch_size
-    l = k + batch_size
-    X_batch = housing_bias[k:l,-1]
-    y_batch = housing_target[k:l,-1]
+    l = (batch_index+1)* batch_size
+    X_batch = housing_bias[k:l,]
+    y_batch = housing_target[k:l,]
     return  X_batch,y_batch
 
 init = tf.global_variables_initializer()
@@ -34,3 +35,5 @@ with tf.Session() as sess:
         for batch_index in range(n_batches):
             X_batch,y_batch = fetch_data(batch_index,batch_size)
             sess.run(training_op,feed_dict={X:X_batch,y:y_batch})
+    best_theta = theta.eval()
+    print(best_theta)
