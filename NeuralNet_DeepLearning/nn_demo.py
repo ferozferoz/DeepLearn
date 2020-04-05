@@ -1,9 +1,9 @@
-from NNPackages import NNMOdel
+from nnlib import NNModel
 
 
 if __name__ == '__main__':
 
-    nnModel = NNMOdel()
+    nnModel = NNModel()
     train_data_path = 'neuralnet_dataset/train_catvnoncat.h5'
     test_data_path = 'neuralnet_dataset/test_catvnoncat.h5'
     train_x_orig, train_y_orig, test_x_orig, test_y_orig = nnModel._load_dataset(train_data_path,test_data_path)
